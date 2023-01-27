@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chat</title>
+  </head>
+  <body>
+    <div id="messages">
+</div>
+
+    <form action="/send" method="post">
+  <input type="text" name="name" id="name-input" size='10px' placeholder='Your username'>
+  <input type="text" name="message" id="message-input">
+  <button type="submit">Send</button>
+</form>
+
+    <script>
+        window.onload = function(){
+            fetch('/messages')
+          .then(response => response.json())
+          .then(messages => {
+            // Update the messages on the client-side
+            const messagesContainer = document.getElementById('messages');
+            messagesContainer.innerHTML = '';
+            messages.forEach(message => {
+              const p = document.createElement('p');
+                p.style = 'display: flex; align-items: center;'
+              messagesContainer.appendChild(p);
+                p.insertAdjacentHTML("afterbegin", `<strong>${message.name.replace(/<script>|<\/script>/gi, "")}</strong>: ` + message.message.replace(/<script>|<\/script>/gi, ""))
+                
+            });
+          })
+        }
+      // Use setInterval to check for new messages every 5 seconds
+      setInterval(() => {
+        // Use fetch to make a GET request to the server
+        fetch('/messages')
+          .then(response => response.json())
+          .then(messages => {
+            // Update the messages on the client-side
+            const messagesContainer = document.getElementById('messages');
+            messagesContainer.innerHTML = '';
+            messages.forEach(message => {
+              const p = document.createElement('p');
+                p.style = 'display: flex; align-items: center;'
+              messagesContainer.appendChild(p);
+                p.insertAdjacentHTML("afterbegin", `<strong>${message.name.replace(/<script>|<\/script>/gi, "")}</strong>: ` + message.message.replace(/<script>|<\/script>/gi, ""))
+                
+            });
+          });
+      }, 2450);
+    </script>
+  </body>
+</html>
